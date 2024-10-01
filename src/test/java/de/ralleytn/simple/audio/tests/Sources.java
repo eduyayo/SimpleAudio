@@ -45,13 +45,12 @@ class Sources {
 		this.name = name;
 	}
 	
-	private static final File getDirectory() {
+	private static File getDirectory() {
 		
 		File tempDir = new File(System.getProperty("java.io.tmpdir"));
 		File directory = new File(tempDir, "simple-audio-test");
 		
-		if(!directory.exists()) {
-			
+		if (!directory.exists()) {
 			directory.mkdirs();
 		}
 		
@@ -103,16 +102,16 @@ class Sources {
 		return getResource(this.name);
 	}
 	
-	public static final URL getResource(String name) {
+	public static URL getResource(String name) {
 		
 		return Sources.class.getClassLoader().getResource(String.format("%s%s", RESOURCE_LOCATION, name));
 	}
 	
-	public static final File copy(String name, File targetDir) throws IOException {
+	public static File copy(String name, File targetDir) throws IOException {
 		
 		File file = new File(targetDir, name);
 		
-		try(InputStream in = Sources.class.getClassLoader().getResourceAsStream(String.format("%s%s", RESOURCE_LOCATION, name));
+		try (InputStream in = Sources.class.getClassLoader().getResourceAsStream(String.format("%s%s", RESOURCE_LOCATION, name));
 			OutputStream out = new FileOutputStream(file)) {
 			
 			int read = 0;

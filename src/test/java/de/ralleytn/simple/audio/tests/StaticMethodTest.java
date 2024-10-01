@@ -27,79 +27,65 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import javax.sound.sampled.Mixer.Info;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import de.ralleytn.simple.audio.AbstractAudio;
 
+@Slf4j
 class StaticMethodTest {
 
 	@Test
-	public void testGenerateSound() {
-		
-		try {
-			
-			int length = 500; // 1/2 sec
-			
-			// WITHOUT HARMONY
-			AbstractAudio.generateSound(10, length, 100, false);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(50, length, 100, false);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(100, length, 100, false);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(150, length, 100, false);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(200, length, 100, false);
-			Thread.sleep(length);
-			
-			// WITH HARMONY
-			AbstractAudio.generateSound(10, length, 100, true);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(50, length, 100, true);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(100, length, 100, true);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(150, length, 100, true);
-			Thread.sleep(length);
-			AbstractAudio.generateSound(200, length, 100, true);
-			Thread.sleep(length);
-			
-		} catch(Exception exception) {
-			
-			fail(exception.getMessage());
-		}
+	public void testGenerateSound() throws InterruptedException {
+		int length = 500; // 1/2 sec
+
+		// WITHOUT HARMONY
+		AbstractAudio.generateSound(10, length, 100, false);
+		Thread.sleep(length); //TODO awaitility??
+		AbstractAudio.generateSound(50, length, 100, false);
+		Thread.sleep(length);
+		AbstractAudio.generateSound(100, length, 100, false);
+		Thread.sleep(length);
+		AbstractAudio.generateSound(150, length, 100, false);
+		Thread.sleep(length);
+		AbstractAudio.generateSound(200, length, 100, false);
+		Thread.sleep(length);
+
+		// WITH HARMONY
+		AbstractAudio.generateSound(10, length, 100, true);
+		Thread.sleep(length);
+		AbstractAudio.generateSound(50, length, 100, true);
+		Thread.sleep(length);
+		AbstractAudio.generateSound(100, length, 100, true);
+		Thread.sleep(length);
+		AbstractAudio.generateSound(150, length, 100, true);
+		Thread.sleep(length);
+		AbstractAudio.generateSound(200, length, 100, true);
+		Thread.sleep(length);
 	}
 	
 	@Test
 	public void testGetPorts() {
-		
-		try {
-			
-			Info[] ports = AbstractAudio.getPorts();
-			
-			System.out.println("Print all audio ports...");
-			System.out.println();
-			System.out.println("===========");
-			
-			for(int index = 0; index < ports.length; index++) {
-				
-				if(index != 0) {
-					
-					System.out.println("----");
-				}
-				
-				System.out.println("Name: " + ports[index].getName());
-				System.out.println("Vendor: " + ports[index].getVendor());
-				System.out.println("Version: " + ports[index].getVersion());
-				System.out.println("Description: " + ports[index].getDescription());
+		Info[] ports = AbstractAudio.getPorts();
+
+		log.info("Print all audio ports...");
+		log.info("");
+		log.info("===========");
+
+		for(int index = 0; index < ports.length; index++) {
+
+			if(index != 0) {
+				log.info("----");
 			}
-			
-			System.out.println("===========");
-			System.out.println();
-			
-		} catch(Exception exception) {
-			
-			fail(exception.getMessage());
+
+			log.info("Name: {}", ports[index].getName());
+			log.info("Vendor: {}", ports[index].getVendor());
+			log.info("Version: {}", ports[index].getVersion());
+			log.info("Description: {}", ports[index].getDescription());
 		}
+
+		log.info("===========");
+		log.info("");
+			
 	}
 }

@@ -23,86 +23,85 @@
  */
 package de.ralleytn.simple.audio.tests;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import org.junit.jupiter.api.Test;
-
 import de.ralleytn.simple.audio.Audio;
 import de.ralleytn.simple.audio.AudioException;
 import de.ralleytn.simple.audio.BufferedAudio;
 import de.ralleytn.simple.audio.StreamedAudio;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@Slf4j
 class LoadingTest {
 	
-	private static final void testAudio(Audio audio) throws AudioException {
+	private static void testAudio(Audio audio) throws AudioException {
 		
 		audio.open();
 		audio.close();
 	}
 	
 	// ==== BUFFERED
-	
-	private static final void loadBufferedFromURL(Sources sources) throws AudioException {
+	private static void loadBufferedFromURL(Sources sources) throws AudioException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getURL()));
-		System.out.println(String.format("Name: %s, Source: URL, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: URL, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadBufferedFromURI(Sources sources) throws AudioException, URISyntaxException {
+	private static void loadBufferedFromURI(Sources sources) throws AudioException, URISyntaxException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getURI()));
-		System.out.println(String.format("Name: %s, Source: URI, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: URI, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadBufferedFromFile(Sources sources) throws AudioException, IOException {
+	private static void loadBufferedFromFile(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getFile()));
-		System.out.println(String.format("Name: %s, Source: File, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: File, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadBufferedFromFileName(Sources sources) throws AudioException {
+	private static void loadBufferedFromFileName(Sources sources) throws AudioException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getFileName()));
-		System.out.println(String.format("Name: %s, Source: File Name, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: File Name, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadBufferedFromPath(Sources sources) throws AudioException {
+	private static void loadBufferedFromPath(Sources sources) throws AudioException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getPath()));
-		System.out.println(String.format("Name: %s, Source: Path, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: Path, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadBufferedFromZipFile(Sources sources) throws AudioException, IOException {
+	private static void loadBufferedFromZipFile(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getZipFile(), sources.getName()));
-		System.out.println(String.format("Name: %s, Source: ZIP File, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: ZIP File, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadBufferedFromZipFileName(Sources sources) throws AudioException, IOException {
+	private static void loadBufferedFromZipFileName(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getZipFileName(), sources.getName()));
-		System.out.println(String.format("Name: %s, Source: ZIP File Name, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: ZIP File Name, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadBufferedFromZipPath(Sources sources) throws AudioException, IOException {
+	private static void loadBufferedFromZipPath(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new BufferedAudio(sources.getZipPath(), sources.getName()));
-		System.out.println(String.format("Name: %s, Source: ZIP Path, Mode: buffered, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: ZIP Path, Mode: buffered, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void testBuffered(Sources sources) throws AudioException, URISyntaxException, IOException {
+	private static void testBuffered(Sources sources) throws AudioException, URISyntaxException, IOException {
 
 		loadBufferedFromURL(sources);
 		loadBufferedFromURI(sources);
@@ -116,63 +115,63 @@ class LoadingTest {
 	
 	// ==== STREAMED
 	
-	private static final void loadStreamedFromURL(Sources sources) throws AudioException {
+	private static void loadStreamedFromURL(Sources sources) throws AudioException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getURL()));
-		System.out.println(String.format("Name: %s, Source: URL, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: URL, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadStreamedFromURI(Sources sources) throws AudioException, URISyntaxException {
+	private static void loadStreamedFromURI(Sources sources) throws AudioException, URISyntaxException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getURI()));
-		System.out.println(String.format("Name: %s, Source: URI, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: URI, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadStreamedFromFile(Sources sources) throws AudioException, IOException {
+	private static void loadStreamedFromFile(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getFile()));
-		System.out.println(String.format("Name: %s, Source: File, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: File, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadStreamedFromFileName(Sources sources) throws AudioException {
+	private static void loadStreamedFromFileName(Sources sources) throws AudioException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getFileName()));
-		System.out.println(String.format("Name: %s, Source: File Name, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: File Name, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadStreamedFromPath(Sources sources) throws AudioException {
+	private static void loadStreamedFromPath(Sources sources) throws AudioException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getPath()));
-		System.out.println(String.format("Name: %s, Source: Path, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: Path, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadStreamedFromZipFile(Sources sources) throws AudioException, IOException {
+	private static void loadStreamedFromZipFile(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getZipFile(), sources.getName()));
-		System.out.println(String.format("Name: %s, Source: ZIP File, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: ZIP File, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadStreamedFromZipFileName(Sources sources) throws AudioException, IOException {
+	private static void loadStreamedFromZipFileName(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getZipFileName(), sources.getName()));
-		System.out.println(String.format("Name: %s, Source: ZIP File Name, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: ZIP File Name, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void loadStreamedFromZipPath(Sources sources) throws AudioException, IOException {
+	private static void loadStreamedFromZipPath(Sources sources) throws AudioException, IOException {
 		
 		long startTime = System.currentTimeMillis();
 		testAudio(new StreamedAudio(sources.getZipPath(), sources.getName()));
-		System.out.println(String.format("Name: %s, Source: ZIP Path, Mode: streamed, Time: %s ms", sources.getName(), System.currentTimeMillis() - startTime));
+		log.info("Name: {}, Source: ZIP Path, Mode: streamed, Time: {} ms", sources.getName(), System.currentTimeMillis() - startTime);
 	}
 	
-	private static final void testStreamed(Sources sources) throws AudioException, URISyntaxException, IOException {
+	private static void testStreamed(Sources sources) throws AudioException, URISyntaxException, IOException {
 
 		loadStreamedFromURL(sources);
 		loadStreamedFromURI(sources);
@@ -184,52 +183,33 @@ class LoadingTest {
 		loadStreamedFromZipPath(sources);
 	}
 	
-	private static final void test(String name, boolean expectFailure) {
-		
-		boolean failure = false;
-		
-		try {
+	private static void test(String name) throws AudioException, URISyntaxException, IOException {
+		Sources sources = new Sources(name);
+		testBuffered(sources);
+		testStreamed(sources);
 			
-			Sources sources = new Sources(name);
-			testBuffered(sources);
-			testStreamed(sources);
-			
-		} catch(Exception exception) {
-			
-			failure = true;
-			
-			if(!expectFailure) {
-				
-				exception.printStackTrace();
-				fail(exception.getMessage());
-			}
-		}
-		
-		if(expectFailure) {
-			
-			assertTrue(failure);
-		}
 	}
 	
 	@Test
-	public void test() {
+	public void test() throws AudioException, URISyntaxException, IOException {
 		
-		System.out.println("Start loading tests...");
-		System.out.println();
-		System.out.println("==========");
+		log.info("Start loading tests...");
+		log.info("");
+		log.info("==========");
+
+		test("audio.aifc");
+		test("audio.aiff");
+		test("audio.au");
+		test("audio.wav");
+		test("audio.mp3");
+		test("audio.ogg");
+		test("audio.snd");
+		assertThrows(AudioException.class, () -> test("audio.aac"));
+		assertThrows(AudioException.class, () -> test("audio.wma"));
+		assertThrows(AudioException.class, () -> test("audio.flac"));
 		
-		test("audio.aifc", false);
-		test("audio.aiff", false);
-		test("audio.au", false);
-		test("audio.wav", false);
-		test("audio.mp3", false);
-		test("audio.ogg", false);
-		test("audio.snd", false);
-		test("audio.aac", true);
-		test("audio.wma", true);
-		test("audio.flac", true);
-		
-		System.out.println("==========");
-		System.out.println();
+		log.info("==========");
+		log.info("");
 	}
+
 }

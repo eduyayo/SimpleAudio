@@ -23,44 +23,36 @@
  */
 package de.ralleytn.simple.audio.tests;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import de.ralleytn.simple.audio.AudioException;
+import de.ralleytn.simple.audio.BufferedAudio;
+import de.ralleytn.simple.audio.Recorder;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import org.junit.jupiter.api.Test;
-
-import de.ralleytn.simple.audio.BufferedAudio;
-import de.ralleytn.simple.audio.Recorder;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RecorderTest {
 
 	@Test
-	void testRecording() {
-		
-		try {
+	void testRecording() throws AudioException, InterruptedException {
+		File output = new File("recorded.au");
+		Recorder recorder = new Recorder();
+		assertFalse(recorder.isRunning());
+		recorder.start(output);
+		assertTrue(recorder.isRunning());
+		Thread.sleep(5000); //TODO awaitility?
+		assertTrue(recorder.getRecordingTime() >= 5000 && recorder.getRecordingTime() <= 5500);
+		recorder.stop();
+		assertFalse(recorder.isRunning());
+
+		BufferedAudio audio = new BufferedAudio(output);
+		audio.open();
+		audio.close();
+
+		output.delete();
 			
-			File output = new File("recorded.au");
-			Recorder recorder = new Recorder();
-			assertFalse(recorder.isRunning());
-			recorder.start(output);
-			assertTrue(recorder.isRunning());
-			Thread.sleep(5000);
-			assertTrue(recorder.getRecordingTime() >= 5000 && recorder.getRecordingTime() <= 5500);
-			recorder.stop();
-			assertFalse(recorder.isRunning());
-			
-			BufferedAudio audio = new BufferedAudio(output);
-			audio.open();
-			audio.close();
-			
-			output.delete();
-			
-		} catch(Exception exception) {
-			
-			exception.printStackTrace();
-			fail(exception.getMessage());
-		}
 	}
+
 }

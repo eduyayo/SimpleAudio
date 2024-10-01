@@ -30,33 +30,24 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.net.URL;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import de.ralleytn.simple.audio.Audio;
 import de.ralleytn.simple.audio.AudioException;
 import de.ralleytn.simple.audio.BufferedAudio;
 
+@Slf4j
 class HeaderTest {
 
-	private static final Map<?, ?> getHeaders(String name) {
-		
-		try {
-			
-			URL resource = Sources.getResource(name);
-			Audio audio = new BufferedAudio(resource);
-			return audio.getHeaders();
-			
-		} catch(AudioException exception) {
-			
-			exception.printStackTrace();
-			fail(exception.getMessage());
-		}
-		
-		return null;
+	private static Map<?, ?> getHeaders(String name) throws AudioException {
+		URL resource = Sources.getResource(name);
+		Audio audio = new BufferedAudio(resource);
+		return audio.getHeaders();
 	}
 	
 	@Test
-	public void testMp3Header() {
+	public void testMp3Header() throws AudioException {
 		
 		Map<?, ?> headers = getHeaders("audio.mp3");
 		
@@ -96,7 +87,7 @@ class HeaderTest {
 	}
 	
 	@Test
-	public void testOggHeader() {
+	public void testOggHeader() throws AudioException {
 		
 		Map<?, ?> headers = getHeaders("audio.ogg");
 		
@@ -124,4 +115,5 @@ class HeaderTest {
 		assertEquals(false, headers.get("ogg.framing_flag"));
 		assertEquals("Lavc58.13.100 libvorbis", headers.get("ogg.comment.encoder"));
 	}
+
 }

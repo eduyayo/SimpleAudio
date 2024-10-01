@@ -23,62 +23,46 @@
  */
 package de.ralleytn.simple.audio.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import org.junit.jupiter.api.Test;
-
+import de.ralleytn.simple.audio.AudioException;
 import de.ralleytn.simple.audio.BufferedAudio;
 import de.ralleytn.simple.audio.Playlist;
 import de.ralleytn.simple.audio.PlaylistListener;
 import de.ralleytn.simple.audio.StreamedAudio;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlaylistTest {
 	
-	private static final Playlist createPlaylist() {
+	private static Playlist createPlaylist() throws AudioException {
 		
 		Playlist playlist = new Playlist();
-		
-		try {
-			
-			playlist.add(new BufferedAudio(Sources.getResource("audio.ogg")));
-			playlist.add(new StreamedAudio(Sources.getResource("audio.mp3")));
-			playlist.add(new StreamedAudio(Sources.getResource("audio.au")));
-			playlist.add(new BufferedAudio(Sources.getResource("audio.aiff")));
-			
-			assertEquals(4, playlist.getNumberOfTracks());
-			
-		} catch(Exception exception) {
-			
-			exception.printStackTrace();
-			fail(exception.getMessage());
-		}
-		
+		playlist.add(new BufferedAudio(Sources.getResource("audio.ogg")));
+		playlist.add(new StreamedAudio(Sources.getResource("audio.mp3")));
+		playlist.add(new StreamedAudio(Sources.getResource("audio.au")));
+		playlist.add(new BufferedAudio(Sources.getResource("audio.aiff")));
+
+		assertEquals(4, playlist.getNumberOfTracks());
 		return playlist;
 	}
 	
 	@Test
-	public void testSetTrack() {
-		
-		try {
+	void testSetTrack() throws InterruptedException, AudioException {
+		Playlist playlist = createPlaylist();
+		playlist.setTrack(2);
+		playlist.play();
+		assertEquals(2, playlist.getCurrentTrackIndex());
+		Thread.sleep(3000); //TODO awaitility???
+		playlist.setTrack(0);
+		assertEquals(0, playlist.getCurrentTrackIndex());
+		Thread.sleep(3000);
 			
-			Playlist playlist = createPlaylist();
-			playlist.setTrack(2);
-			playlist.play();
-			assertEquals(2, playlist.getCurrentTrackIndex());
-			Thread.sleep(3000);
-			playlist.setTrack(0);
-			assertEquals(0, playlist.getCurrentTrackIndex());
-			Thread.sleep(3000);
-			
-		} catch(InterruptedException exception) {}
 	}
 	
 	@Test
-	public void testAddAndRemoveListeners() {
-		
+	void testAddAndRemoveListeners() throws AudioException {
 		PlaylistListener listener = event -> {};
 		Playlist playlist = createPlaylist();
 		playlist.addPlaylistListener(listener);
@@ -90,7 +74,7 @@ class PlaylistTest {
 	}
 
 	@Test
-	public void testPlay() {
+	void testPlay() throws AudioException, InterruptedException {
 		
 		class Data {
 			boolean started;
@@ -138,28 +122,24 @@ class PlaylistTest {
 		});
 		playlist.play();
 		
-		try {
-			
-			assertEquals(0, playlist.getCurrentTrackIndex());
-			Thread.sleep(1100);
-			playlist.next();
-			assertEquals(1, playlist.getCurrentTrackIndex());
-			Thread.sleep(5100);
-			playlist.setVolume(-20.0F);
-			assertEquals(2, playlist.getCurrentTrackIndex());
-			Thread.sleep(5100);
-			assertEquals(3, playlist.getCurrentTrackIndex());
-			Thread.sleep(5100);
-			
-		} catch(InterruptedException exception) {}
-		
+		assertEquals(0, playlist.getCurrentTrackIndex());
+		Thread.sleep(1100);
+		playlist.next();
+		assertEquals(1, playlist.getCurrentTrackIndex());
+		Thread.sleep(5100);
+		playlist.setVolume(-20.0F);
+		assertEquals(2, playlist.getCurrentTrackIndex());
+		Thread.sleep(5100);
+		assertEquals(3, playlist.getCurrentTrackIndex());
+		Thread.sleep(5100);
+
 		playlist.close();
 		assertEquals(-1, playlist.getCurrentTrackIndex());
 		data.test();
 	}
 	
 	@Test
-	public void testShuffle() {
+	void testShuffle() throws AudioException {
 		
 		int[] order = {0, 1, 2, 3};
 		int index = 0;
@@ -175,7 +155,7 @@ class PlaylistTest {
 		
 		boolean allEqual = true;
 		
-		for(int i = 0; i < 200; i++) {
+		for (int i = 0; i < 200; i++) {
 			
 			if(i % 4 == 0) {
 				
@@ -195,28 +175,24 @@ class PlaylistTest {
 	}
 	
 	@Test
-	public void testPause() {
+	void testPause() throws InterruptedException, AudioException {
 		
 		Playlist playlist = createPlaylist();
 		playlist.play();
 		
-		try {
+		Thread.sleep(2500);
+		assertTrue(playlist.isPlaying());
+		assertFalse(playlist.isPaused());
+		playlist.pause();
+		assertFalse(playlist.isPlaying());
+		assertTrue(playlist.isPaused());
+		Thread.sleep(1000);
+		playlist.resume();
+		assertTrue(playlist.isPlaying());
+		assertFalse(playlist.isPaused());
+		Thread.sleep(5000);
+		playlist.stop();
 			
-			Thread.sleep(2500);
-			assertTrue(playlist.isPlaying());
-			assertFalse(playlist.isPaused());
-			playlist.pause();
-			assertFalse(playlist.isPlaying());
-			assertTrue(playlist.isPaused());
-			Thread.sleep(1000);
-			playlist.resume();
-			assertTrue(playlist.isPlaying());
-			assertFalse(playlist.isPaused());
-			Thread.sleep(5000);
-			playlist.stop();
-			
-		} catch(InterruptedException exception) {}
-	
 		playlist.close();
 	}
 }

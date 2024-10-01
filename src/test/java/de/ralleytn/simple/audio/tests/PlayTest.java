@@ -23,65 +23,44 @@
  */
 package de.ralleytn.simple.audio.tests;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.net.URL;
-
-import org.junit.jupiter.api.Test;
-
 import de.ralleytn.simple.audio.Audio;
 import de.ralleytn.simple.audio.AudioEvent;
 import de.ralleytn.simple.audio.AudioException;
 import de.ralleytn.simple.audio.BufferedAudio;
 import de.ralleytn.simple.audio.StreamedAudio;
+import org.junit.jupiter.api.Test;
+
+import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayTest {
 	
-	private static final void testAudio(Audio audio) throws AudioException {
+	private static void testAudio(Audio audio) throws AudioException, InterruptedException {
 		
 		audio.open();
 		audio.addAudioListener(event -> {
-
-			if(event.getType() == AudioEvent.Type.REACHED_END) {
-
+			if (event.getType() == AudioEvent.Type.REACHED_END) {
 				assertTrue(audio.isOpen());
 				audio.close();
 			}
 		});
 		audio.play();
-		
-		try {
+
+		Thread.sleep(audio.getLength() + 200);
 			
-			Thread.sleep(audio.getLength() + 200);
-			
-		} catch(InterruptedException exception) {
-			
-			// DO NOTHING!
-		}
-		
 		assertFalse(audio.isOpen());
 	}
 	
-	private static final void test(String name) {
-		
-		try {
-			
-			URL resource = Sources.getResource(name);
-			testAudio(new BufferedAudio(resource));
-			testAudio(new StreamedAudio(resource));
-			
-		} catch(AudioException exception) {
-			
-			exception.printStackTrace();
-			fail(exception.getMessage());
-		}
+	private static void test(String name) throws AudioException, InterruptedException {
+		URL resource = Sources.getResource(name);
+		testAudio(new BufferedAudio(resource));
+		testAudio(new StreamedAudio(resource));
 	}
 	
 	@Test
-	public void test() {
-		
+	void test() throws AudioException, InterruptedException {
 		test("audio.aifc");
 		test("audio.aiff");
 		test("audio.au");
@@ -90,4 +69,5 @@ class PlayTest {
 		test("audio.ogg");
 		test("audio.snd");
 	}
+
 }
